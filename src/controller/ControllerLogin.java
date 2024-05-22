@@ -141,7 +141,7 @@ public class ControllerLogin {
                 //s.getTxtNome().setText(" ggg");
                 //System.out.println(p.getNome());
                 //System.out.println("pos nome" + res2.getString("nome"));
-                s.getTxtCpf().setText(p.getCpf());
+                s.getTxtCpf().setText(p.getCpf());//asd
                 //s.getTxtCpf().setText(p.getCpf());
                 
                 
