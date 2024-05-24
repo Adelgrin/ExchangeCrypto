@@ -8,7 +8,7 @@ package model;
  *
  * @author Adelgrin
  */
-public class Carteira {
+public class Carteira{
     public String usuario;
     public double real, btc, eth, xrp;
     public Pessoa p;

@@ -102,7 +102,7 @@ public class SenhaVenda extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btValidarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btValidarActionPerformed
-        control.VerificarSenhaVenda(p, this.getTxtSenha().getText(), this);
+        control.verificarSenhaVenda(p, this.getTxtSenha().getText(), this);
     }//GEN-LAST:event_btValidarActionPerformed
 
     /**
