@@ -24,6 +24,8 @@ import view.Saque;
 import view.SenhaCompra;
 import view.SenhaVenda;
 import view.VendaCrypto;
+import java.util.ArrayList;
+import view.Extrato;
 
 /**
  *
@@ -46,6 +48,8 @@ public class ControllerLogin {
     private SenhaCompra senha;
     private SenhaVenda senhaVenda;
     private VendaCrypto venda;
+    ArrayList<ArrayList<String>> array = new ArrayList<>();
+    
 
     
 
@@ -141,7 +145,7 @@ public class ControllerLogin {
                 //s.getTxtNome().setText(" ggg");
                 //System.out.println(p.getNome());
                 //System.out.println("pos nome" + res2.getString("nome"));
-                s.getTxtCpf().setText(p.getCpf());//asd
+                s.getTxtCpf().setText(p.getCpf());//
                 //s.getTxtCpf().setText(p.getCpf());
                 
                 
@@ -164,12 +168,15 @@ public class ControllerLogin {
             Connection conn = conexao.getConnection();
             //PessoasLogadoDAO pdao = new PessoasLogadoDAO(conn);
             //ResultSet res2 = pdao.consultar(c);
+            PessoasDAO pdao = new PessoasDAO(conn);
             CarteiraDAO cdao = new CarteiraDAO(conn);
             ResultSet res = cdao.consultar(c);
             if(res.next()){
                 valor = res.getDouble("realval");
                 System.out.println(valor);
                 valorUpdate = valor + Double.valueOf(de.getTxtDeposito().getText());
+                pdao.updateExtrato(c.getUsuario(), ("deposito de " + de.getTxtDeposito().getText() + " R$"));
+                this.popularExtrato(p);
                 System.out.println(valorUpdate);
                 String sql = "UPDATE public.carteira SET realval=? WHERE usuario = ?;";
                 PreparedStatement statement = conn.prepareStatement(sql);
@@ -199,6 +206,7 @@ public class ControllerLogin {
             Connection conn = conexao.getConnection();
             //PessoasLogadoDAO pdao = new PessoasLogadoDAO(conn);
             //ResultSet res2 = pdao.consultar(c);
+            PessoasDAO pdao = new PessoasDAO(conn);
             CarteiraDAO cdao = new CarteiraDAO(conn);
             ResultSet res = cdao.consultar(c);
             if(res.next()){
@@ -216,6 +224,8 @@ public class ControllerLogin {
                 
                 System.out.println(valor);
                 valorUpdate = valor - Double.valueOf(de.getTxtDeposito().getText());
+                pdao.updateExtrato(c.getUsuario(), ("saque de " + de.getTxtDeposito().getText() + " R$"));
+                this.popularExtrato(p);
                 System.out.println(valorUpdate);
                 String sql = "UPDATE public.carteira SET realval=? WHERE usuario = ?;";
                 PreparedStatement statement = conn.prepareStatement(sql);
@@ -237,9 +247,10 @@ public class ControllerLogin {
 }
     public void comprarController(Carteira c, ComprarCrypto comprar){
          Conexao conexao = new Conexao();
-         Carteira c2 = new Carteira("cotacao");
+         Carteira c2 = new Carteira("cotacao"); 
          try{
          Connection conn = conexao.getConnection();
+         PessoasDAO pdao = new PessoasDAO(conn);
          CarteiraDAO cdao = new CarteiraDAO(conn);
          CarteiraDAO cdao2 = new CarteiraDAO(conn);
             ResultSet resc2 = cdao2.consultar(c2);
@@ -257,6 +268,7 @@ public class ControllerLogin {
                 statement.setString(2, c.usuario);
                     //System.out.println(c.usuario);
                 statement.execute();
+                pdao.updateExtrato(c.getUsuario(), ("compra de " + comprar.getTxtValor().getText() + " btc"));
                         //System.out.println("funcionou");
                         valorUpdate = (Double.parseDouble(comprar.getTxtValor().getText()) + resc.getDouble("btc"));
                     String sql2 = "UPDATE public.carteira SET btc = ? WHERE usuario = ?;";
@@ -284,6 +296,8 @@ public class ControllerLogin {
                 statement.setString(2, c.usuario);
                     //System.out.println(c.usuario);
                 statement.execute();
+                pdao.updateExtrato(c.getUsuario(), ("compra de " + comprar.getTxtValor().getText() + " eth"));
+                //this.popularExtrato(p);
                         //System.out.println("funcionou");
                         valorUpdate = Double.parseDouble(comprar.getTxtValor().getText()) + resc.getDouble("eth");
                     String sql2 = "UPDATE public.carteira SET eth = ? WHERE usuario = ?;";
@@ -310,6 +324,8 @@ public class ControllerLogin {
                 statement.setString(2, c.usuario);
                     //System.out.println(c.usuario);
                 statement.execute();
+                pdao.updateExtrato(c.getUsuario(), ("compra de " + comprar.getTxtValor().getText() + " xrp"));
+                //this.popularExtrato(p);
                         //System.out.println("funcionou");
                         valorUpdate = Double.parseDouble(comprar.getTxtValor().getText()) + resc.getDouble("xrp");
                     String sql2 = "UPDATE public.carteira SET xrp = ? WHERE usuario = ?;";
@@ -424,6 +440,7 @@ public class ControllerLogin {
          Carteira c2 = new Carteira("cotacao");
          try{
          Connection conn = conexao.getConnection();
+         PessoasDAO pdao = new PessoasDAO(conn);
          CarteiraDAO cdao = new CarteiraDAO(conn);
          CarteiraDAO cdao2 = new CarteiraDAO(conn);
             ResultSet resc2 = cdao2.consultar(c2);
@@ -442,6 +459,9 @@ public class ControllerLogin {
                 statement.setString(2, c.usuario);
                     //System.out.println(c.usuario);
                 statement.execute();
+                
+                pdao.updateExtrato(c.getUsuario(), ("venda de " + venda.getTxtValor().getText() + " btc"));
+                //this.popularExtrato(p);
                         //System.out.println("funcionou");
                         valorUpdate = (resc.getDouble("realval") + (Double.parseDouble(venda.getTxtValor().getText())*resc2.getDouble("btc")));
                         valorUpdate = valorUpdate - (valorUpdate * 0.03);//3 por cento de valor de venda
@@ -470,6 +490,9 @@ public class ControllerLogin {
                 statement.setString(2, c.usuario);
                     //System.out.println(c.usuario);
                 statement.execute();
+                
+                pdao.updateExtrato(c.getUsuario(), ("venda de " + venda.getTxtValor().getText() + " eth"));
+                //this.popularExtrato(p);
                         //System.out.println("funcionou");
                         valorUpdate = resc.getDouble("realval") + (Double.parseDouble(venda.getTxtValor().getText())*resc2.getDouble("eth"));
                         valorUpdate = valorUpdate - (valorUpdate * 0.02);//2 por cento de valor de venda
@@ -497,6 +520,9 @@ public class ControllerLogin {
                 statement.setString(2, c.usuario);
                     //System.out.println(c.usuario);
                 statement.execute();
+                
+                pdao.updateExtrato(c.getUsuario(), ("venda de " + venda.getTxtValor().getText() + " xrp"));
+                //this.popularExtrato(p);
                         //System.out.println("funcionou");
                         valorUpdate = resc.getDouble("realval") + (Double.parseDouble(venda.getTxtValor().getText())*resc2.getDouble("xrp"));
                         valorUpdate = valorUpdate - (valorUpdate * 0.01);//1 por cento de valor de venda
@@ -529,7 +555,7 @@ public class ControllerLogin {
          }
         
     }
-    public void VerificarSenhaVenda(Pessoa p, String senha, SenhaVenda janela){
+    public void verificarSenhaVenda(Pessoa p, String senha, SenhaVenda janela){
         logado = p.getUsuario();
         Conexao conexao = new Conexao();
         Carteira cota = new Carteira("cotacao");
@@ -565,6 +591,61 @@ public class ControllerLogin {
         }catch(SQLException e){
             JOptionPane.showMessageDialog(login, "Erro de conexão!");
             e.printStackTrace();
+        }
+    }
+    public void popularExtrato(Pessoa p){
+        
+        Conexao conexao = new Conexao();
+        try{
+        Connection conn = conexao.getConnection();
+        PessoasDAO dao = new PessoasDAO(conn);
+        ResultSet res = dao.consultarExtrato(p);
+        while(res.next()) {
+            System.out.println("houve resposta");
+            //array.add("data : " + res.getDate("data") + "operacao: " + res.getString("operacao"));
+           
+        }
+        }catch(SQLException e){
+            
+        }
+    }
+    public void atualizarExtrato(String usuario, String operacao){
+        
+        Conexao conexao = new Conexao();
+        System.out.println("atualizou?");
+        try{
+        Connection conn = conexao.getConnection();
+        PessoasDAO dao = new PessoasDAO(conn);
+            System.out.println("há array?" + array.size());
+            for (int i = 0; i < array.size(); i++) {
+                System.out.println("sim");
+                dao.updateExtrato((array.get(i).get(0)),(array.get(i).get(1)));   
+                System.out.println("teste"+array.get(i).get(1));
+            }
+            System.out.println("tamanho do array em atualizar" + array.size());
+            dao.updateExtrato(usuario, operacao);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+    public void Extrato(Extrato e, Pessoa p){
+        String texto = "";
+        System.out.println("tamanho do array"+ array.size());
+        Conexao conexao = new Conexao();
+        try{
+        Connection conn = conexao.getConnection();
+        PessoasDAO dao = new PessoasDAO(conn);
+        ResultSet res = dao.consultarExtrato(p);
+        while(res.next()){
+            texto += "Data: " + res.getString("data") + " operacao: " + res.getString("operacao") + "\n";
+        }
+//        for (int i = 0; i < array.size(); i++) {
+//            System.out.println("teste"+array.get(i).get(0));
+//            texto += "Data: " + array.get(i).get(0) + " operacao: " + array.get(i).get(1) + "\n";
+//        }
+        e.getTxtArea().setText(texto);
+        }catch(SQLException ex){
+            ex.printStackTrace();
         }
     }
 }

@@ -65,6 +65,11 @@ public class Menu extends javax.swing.JFrame {
         });
 
         jButton2.setText("Consultar Extrato");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Depositar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -181,6 +186,13 @@ public class Menu extends javax.swing.JFrame {
         SenhaVenda v = new SenhaVenda(p);
         v.setVisible(true);
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Extrato e = new Extrato();
+        e.setVisible(true);
+        control.popularExtrato(p);
+        control.Extrato(e,p);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     
     
