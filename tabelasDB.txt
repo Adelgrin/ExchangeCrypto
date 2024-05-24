@@ -1,0 +1,38 @@
+CREATE TABLE IF NOT EXISTS public.carteira
+(
+    usuario character varying COLLATE pg_catalog."default",
+    realval real,
+    btc real,
+    eth real,
+    xrp real
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.carteira
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public.extrato
+(
+    usuario character varying COLLATE pg_catalog."default" NOT NULL,
+    data date NOT NULL,
+    operacao character varying COLLATE pg_catalog."default" NOT NULL
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.extrato
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public.pessoa
+(
+    nome character varying COLLATE pg_catalog."default",
+    cpf character varying COLLATE pg_catalog."default",
+    senha character varying COLLATE pg_catalog."default",
+    usuario character varying COLLATE pg_catalog."default"
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.pessoa
+    OWNER to postgres;
